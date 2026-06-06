@@ -1,0 +1,155 @@
+{
+  "name": "Reel Factory - Alessandro Performance",
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [ { "field": "cronExpression", "expression": "0 9 * * 1,3,5" } ] }
+      },
+      "id": "node-schedule",
+      "name": "1 · Agenda (Seg/Qua/Sex 9h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [ 240, 300 ]
+    },
+    {
+      "parameters": {
+        "assignments": { "assignments": [
+          { "id": "a1", "name": "tema", "value": "História e debate do futebol brasileiro (fórmula 'Anos 90')", "type": "string" },
+          { "id": "a2", "name": "id", "value": "={{ $now.toMillis() }}", "type": "string" }
+        ] }
+      },
+      "id": "node-tema",
+      "name": "2 · Define o Tema",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [ 460, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Authorization", "value": "Bearer COLE_SUA_OPENAI_KEY" }, { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4o-mini\",\n  \"response_format\": { \"type\": \"json_object\" },\n  \"messages\": [\n    { \"role\": \"system\", \"content\": \"Você é roteirista de Reels de futebol para @alessandro.performance. Estilo: história e debate do futebol brasileiro, gancho forte nos 3 primeiros segundos, CTA de seguir. Responda SOMENTE em JSON: {\\\"narration\\\": \\\"texto corrido da narração (25-40s de fala)\\\", \\\"hook\\\": \\\"frase de abertura\\\", \\\"title\\\": \\\"título curto\\\", \\\"caption\\\": \\\"legenda do post com hashtags\\\"}\" },\n    { \"role\": \"user\", \"content\": \"Tema: {{ $json.tema }}\" }\n  ]\n}",
+        "options": {}
+      },
+      "id": "node-script",
+      "name": "3 · Gera o Roteiro (OpenAI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [ 680, 300 ]
+    },
+    {
+      "parameters": {
+        "assignments": { "assignments": [
+          { "id": "b1", "name": "roteiro", "value": "={{ JSON.parse($json.choices[0].message.content) }}", "type": "object" },
+          { "id": "b2", "name": "id", "value": "={{ $('2 · Define o Tema').item.json.id }}", "type": "string" }
+        ] }
+      },
+      "id": "node-parse",
+      "name": "4 · Extrai narração/textos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [ 900, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.elevenlabs.io/v1/text-to-speech/COLE_SEU_VOICE_ID",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "xi-api-key", "value": "COLE_SUA_ELEVENLABS_KEY" }, { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": {{ JSON.stringify($json.roteiro.narration) }},\n  \"model_id\": \"eleven_multilingual_v2\",\n  \"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.8 }\n}",
+        "options": { "response": { "response": { "responseFormat": "file" } } }
+      },
+      "id": "node-voice",
+      "name": "5 · Gera SUA Voz (ElevenLabs)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [ 1120, 300 ]
+    },
+    {
+      "parameters": {
+        "protocol": "ftp",
+        "operation": "upload",
+        "path": "=/public_html/reels/audio/{{ $('4 · Extrai narração/textos').item.json.id }}.mp3",
+        "binaryData": true,
+        "binaryPropertyName": "data"
+      },
+      "id": "node-ftp",
+      "name": "6 · Hospeda o áudio (FTP)",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [ 1340, 300 ],
+      "credentials": { "ftp": { "id": "ftp-painel", "name": "FTP painel.alenet.com.br" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.creatomate.com/v1/renders",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Authorization", "value": "Bearer COLE_SUA_CREATOMATE_KEY" }, { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"template_id\": \"COLE_SEU_TEMPLATE_ID\",\n  \"modifications\": {\n    \"Titulo\": {{ JSON.stringify($('4 · Extrai narração/textos').item.json.roteiro.title) }},\n    \"Hook\": {{ JSON.stringify($('4 · Extrai narração/textos').item.json.roteiro.hook) }},\n    \"Audio\": \"https://painel.alenet.com.br/reels/audio/{{ $('4 · Extrai narração/textos').item.json.id }}.mp3\"\n  }\n}",
+        "options": {}
+      },
+      "id": "node-render",
+      "name": "7 · Renderiza o Vídeo (Creatomate)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [ 1560, 300 ]
+    },
+    {
+      "parameters": { "amount": 90, "unit": "seconds" },
+      "id": "node-wait",
+      "name": "8 · Espera renderizar",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [ 1780, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.creatomate.com/v1/renders/{{ $('7 · Renderiza o Vídeo (Creatomate)').item.json.id || $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Authorization", "value": "Bearer COLE_SUA_CREATOMATE_KEY" } ] },
+        "options": {}
+      },
+      "id": "node-status",
+      "name": "9 · Pega o link do .mp4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [ 2000, 300 ]
+    },
+    {
+      "parameters": {
+        "chatId": "COLE_SEU_CHAT_ID",
+        "text": "=🎬 Reel pronto pra aprovar!\n\n*{{ $('4 · Extrai narração/textos').item.json.roteiro.title }}*\n\nVídeo: {{ $json.url }}\n\nLegenda:\n{{ $('4 · Extrai narração/textos').item.json.roteiro.caption }}\n\n👉 Se aprovar, publique no Instagram (ou ative o nó de publicação).",
+        "additionalFields": {}
+      },
+      "id": "node-approve",
+      "name": "10 · Te manda pra Aprovar (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [ 2220, 300 ],
+      "credentials": { "telegramApi": { "id": "tg-bot", "name": "Telegram Bot" } }
+    }
+  ],
+  "connections": {
+    "1 · Agenda (Seg/Qua/Sex 9h)": { "main": [ [ { "node": "2 · Define o Tema", "type": "main", "index": 0 } ] ] },
+    "2 · Define o Tema": { "main": [ [ { "node": "3 · Gera o Roteiro (OpenAI)", "type": "main", "index": 0 } ] ] },
+    "3 · Gera o Roteiro (OpenAI)": { "main": [ [ { "node": "4 · Extrai narração/textos", "type": "main", "index": 0 } ] ] },
+    "4 · Extrai narração/textos": { "main": [ [ { "node": "5 · Gera SUA Voz (ElevenLabs)", "type": "main", "index": 0 } ] ] },
+    "5 · Gera SUA Voz (ElevenLabs)": { "main": [ [ { "node": "6 · Hospeda o áudio (FTP)", "type": "main", "index": 0 } ] ] },
+    "6 · Hospeda o áudio (FTP)": { "main": [ [ { "node": "7 · Renderiza o Vídeo (Creatomate)", "type": "main", "index": 0 } ] ] },
+    "7 · Renderiza o Vídeo (Creatomate)": { "main": [ [ { "node": "8 · Espera renderizar", "type": "main", "index": 0 } ] ] },
+    "8 · Espera renderizar": { "main": [ [ { "node": "9 · Pega o link do .mp4", "type": "main", "index": 0 } ] ] },
+    "9 · Pega o link do .mp4": { "main": [ [ { "node": "10 · Te manda pra Aprovar (Telegram)", "type": "main", "index": 0 } ] ] }
+  }
+}

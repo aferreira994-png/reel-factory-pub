@@ -16,7 +16,7 @@ Você vai preparar o devocional diário do usuário, em português, com tom acol
    - **Reflexão**: 3 a 5 parágrafos curtos meditando sobre o versículo e o tema, aplicados à vida real. Fale diretamente com o leitor ("você"). Evite clichês e jargão religioso vazio.
    - **Para meditar hoje**: 2 ou 3 perguntas ou passos práticos para o dia.
    - **Oração**: uma oração em primeira pessoa (4 a 8 linhas), retomando o tema e o pedido do usuário com as palavras dele quando fizer sentido.
-3. **Registro**: salve o devocional em `devocionais/AAAA-MM-DD-slug-do-tema.md` na raiz do repositório (crie a pasta se não existir), usando a data de hoje. Depois, faça commit e push na branch de trabalho da sessão.
+3. **Registro**: salve o devocional em `devocionais/AAAA-MM-DD-slug-do-tema.md` na raiz do repositório (crie a pasta se não existir), usando a data de hoje. Adicione também uma linha na tabela do índice `devocionais/README.md` (data, tema, versículo-chave, link do arquivo), criando a seção do mês se necessário. Depois, faça commit e push na branch de trabalho da sessão.
 4. **Resposta ao usuário**: apresente o devocional completo na conversa (não apenas o caminho do arquivo).
 
 ## Tom

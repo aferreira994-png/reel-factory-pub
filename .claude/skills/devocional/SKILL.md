@@ -20,6 +20,13 @@ Você vai preparar o devocional diário do usuário, em português, com tom acol
 4. **Página web (Artifact)**: atualize a página "Meus Devocionais Diários" publicada em `https://claude.ai/code/artifact/bdfac1be-8cf0-4de9-a2f4-cadcda2412ea` — use a ferramenta Artifact passando essa URL no parâmetro `url` para manter o mesmo link. Adicione o devocional novo no topo (o mais recente aparece primeiro, completo) e acrescente a linha correspondente na tabela "Índice por dia". Mantenha o favicon 📖 e o design existente da página.
 5. **Resposta ao usuário**: apresente o devocional completo na conversa (não apenas o caminho do arquivo) e lembre o link da página.
 
+## Rotina de oração do usuário
+
+- **05:00** — oração da manhã, sempre com o **Salmo 91** (todos os dias).
+- **18:00** — oração da tarde.
+- Os temas geralmente vêm de palavras que o usuário ouve do bispo Leonardo e anota. Use a frase trazida como ponto de partida, mas escreva sempre um devocional original, desenvolvido com a Bíblia (não reproduza pregações).
+- Quando fizer sentido, mencione a qual oração o tema pertence (manhã ou 18h) no devocional.
+
 ## Tom
 
 - Caloroso, esperançoso e bíblico, sem ser sentimentalista.

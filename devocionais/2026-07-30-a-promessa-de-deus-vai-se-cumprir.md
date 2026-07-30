@@ -1,6 +1,8 @@
 # Eu creio que a promessa de Deus vai se cumprir na minha vida
 
-**Data:** 30 de julho de 2026
+**Data:** 30 de julho de 2026 · Palavra da oração das 18h
+
+> **"A promessa de Deus não vai se encaixar na minha realidade — é a minha realidade que vai se encaixar na promessa de Deus."**
 
 ## Versículo-chave
 
@@ -10,6 +12,8 @@
 ## Reflexão
 
 Repare no fundamento que este versículo dá para a sua declaração de hoje. Você não disse "eu creio que vai dar certo" nem "eu creio na minha sorte". Você disse: eu creio que a promessa **de Deus** vai se cumprir. E a razão para reter firme essa esperança não está em você, nas circunstâncias ou na força da sua fé — está no caráter de quem prometeu: "porque fiel é o que prometeu."
+
+É exatamente isso que a palavra de hoje declara: a promessa de Deus não vai diminuir para caber na sua realidade — é a sua realidade que vai ser transformada até caber na promessa. Foi assim com Sara: a realidade dizia "velha demais para gerar um filho", mas a promessa não se ajustou à idade dela; o corpo dela é que se ajustou à promessa (Gênesis 21:1-2). "Haveria coisa alguma difícil ao Senhor?" (Gênesis 18:14). Quando a sua situação e a Palavra de Deus dizem coisas diferentes, não é a Palavra que precisa mudar.
 
 A Bíblia inteira é o registro de um Deus que cumpre o que fala. "Deus não é homem, para que minta; nem filho do homem, para que se arrependa. Porventura, diria ele e não o faria?" (Números 23:19). E no fim da conquista da terra prometida, a Escritura faz questão de anotar: "Palavra alguma falhou de todas as boas palavras que o Senhor falara à casa de Israel; tudo se cumpriu" (Josué 21:45). Tudo. Esse é o histórico do Deus em quem você está confiando.
 
